@@ -22,3 +22,10 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Binary dir
+cmd/**/bin/
+
+# BoltDB files
+*.db
+*.db.lock
