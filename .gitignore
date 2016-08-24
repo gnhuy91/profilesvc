@@ -26,6 +26,9 @@ _testmain.go
 # Binary dir
 cmd/**/bin/
 
+# Glide dir
+.glide/
+
 # BoltDB files
 *.db
 *.db.lock
