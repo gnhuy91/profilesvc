@@ -29,7 +29,7 @@ func main() {
 	defer db.Close()
 
 	// Create "profiles" bucket
-	err = func(db *bolt.DB, name string) error {
+	if err := func(db *bolt.DB, name string) error {
 		tx, err := db.Begin(true)
 		if err != nil {
 			return err
@@ -44,9 +44,7 @@ func main() {
 			return err
 		}
 		return nil
-	}(db, "profiles")
-
-	if err != nil {
+	}(db, "profiles"); err != nil {
 		logger.Log("bolt", err)
 	}
 
