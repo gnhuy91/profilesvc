@@ -11,12 +11,16 @@ import (
 	"github.com/gnhuy91/profilesvc"
 )
 
-// ProfileService represents a BoltDB implementation of profilesvc.Service.
-type ProfileService struct {
+func NewBoltService(db *bolt.DB) profilesvc.Service {
+	return &Service{db}
+}
+
+// Service represents a BoltDB implementation of profilesvc.Service.
+type Service struct {
 	DB *bolt.DB
 }
 
-func (s *ProfileService) PostProfile(ctx context.Context, p profilesvc.Profile) error {
+func (s *Service) PostProfile(ctx context.Context, p profilesvc.Profile) error {
 	return s.DB.Update(func(tx *bolt.Tx) error {
 		// Retrieve the users bucket.
 		// This should be created when the DB is first opened.
@@ -39,7 +43,7 @@ func (s *ProfileService) PostProfile(ctx context.Context, p profilesvc.Profile) 
 	})
 }
 
-func (s *ProfileService) GetProfile(ctx context.Context, id string) (profilesvc.Profile, error) {
+func (s *Service) GetProfile(ctx context.Context, id string) (profilesvc.Profile, error) {
 	var profile profilesvc.Profile
 	var err error
 
@@ -57,7 +61,7 @@ func (s *ProfileService) GetProfile(ctx context.Context, id string) (profilesvc.
 	return profile, err
 }
 
-func (s *ProfileService) DeleteProfile(ctx context.Context, id string) error {
+func (s *Service) DeleteProfile(ctx context.Context, id string) error {
 	return s.DB.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("profiles"))
 		return b.Delete([]byte(id))

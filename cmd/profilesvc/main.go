@@ -50,7 +50,7 @@ func main() {
 
 	var svc profilesvc.Service
 	{
-		svc = &boltsvc.ProfileService{DB: db}
+		svc = boltsvc.NewBoltService(db)
 	}
 
 	ctx := context.Background()
