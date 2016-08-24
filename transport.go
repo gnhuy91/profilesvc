@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -52,15 +51,16 @@ func MakeHTTPHandler(ctx context.Context, s Service, logger kitlog.Logger) http.
 }
 
 func decodePostProfileRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var buf bytes.Buffer
-	body := io.TeeReader(r.Body, &buf)
-
 	var request postProfileRequest
+	var buf bytes.Buffer
+
+	// capture r.Body contents to buf
+	body := io.TeeReader(r.Body, &buf)
 	err := json.NewDecoder(body).Decode(&request.Profile)
 	if err != nil {
+		// inspect buf...
 		return nil, err
 	}
-	fmt.Println("body", buf.String())
 	return request, nil
 }
 
