@@ -11,7 +11,7 @@ import (
 	"github.com/gnhuy91/profilesvc"
 )
 
-// UserService represents a PostgreSQL implementation of myapp.UserService.
+// ProfileService represents a BoltDB implementation of profilesvc.Service.
 type ProfileService struct {
 	DB *bolt.DB
 }
