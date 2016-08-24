@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	kitlog "github.com/go-kit/kit/log"
-	httptransport "github.com/go-kit/kit/transport/http"
+	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 	"golang.org/x/net/context"
 )
@@ -22,25 +22,25 @@ var (
 
 func MakeHTTPHandler(ctx context.Context, s Service, logger kitlog.Logger) http.Handler {
 	r := mux.NewRouter()
-	options := []httptransport.ServerOption{
-		httptransport.ServerErrorLogger(logger),
+	options := []kithttp.ServerOption{
+		kithttp.ServerErrorLogger(logger),
 	}
 
-	r.Methods("POST").Path("/profile").Handler(httptransport.NewServer(
+	r.Methods("POST").Path("/profile").Handler(kithttp.NewServer(
 		ctx,
 		MakePostProfileEndpoint(s),
 		decodePostProfileRequest,
 		encodeResponse,
 		options...,
 	))
-	r.Methods("GET").Path("/profile/{id}").Handler(httptransport.NewServer(
+	r.Methods("GET").Path("/profile/{id}").Handler(kithttp.NewServer(
 		ctx,
 		MakeGetProfileEndpoint(s),
 		decodeGetProfileRequest,
 		encodeResponse,
 		options...,
 	))
-	r.Methods("DELETE").Path("/profile/{id}").Handler(httptransport.NewServer(
+	r.Methods("DELETE").Path("/profile/{id}").Handler(kithttp.NewServer(
 		ctx,
 		MakeDeleteProfileEndpoint(s),
 		decodeDeleteProfileRequest,
