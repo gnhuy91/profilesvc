@@ -28,29 +28,34 @@ func main() {
 	}
 	defer db.Close()
 
-	// Create "profiles" bucket
-	if err := func(db *bolt.DB, name string) error {
-		tx, err := db.Begin(true)
-		if err != nil {
-			return err
-		}
-		defer tx.Rollback()
+	// Create bucket
+	const bucketName = "profiles"
+	{
+		err := func(db *bolt.DB, name string) error {
+			tx, err := db.Begin(true)
+			if err != nil {
+				return err
+			}
+			defer tx.Rollback()
 
-		_, err = tx.CreateBucket([]byte(name))
+			_, err = tx.CreateBucket([]byte(name))
+			if err != nil {
+				return err
+			}
+			if err := tx.Commit(); err != nil {
+				return err
+			}
+			return nil
+		}(db, bucketName)
+
 		if err != nil {
-			return err
+			logger.Log("bolt", err)
 		}
-		if err := tx.Commit(); err != nil {
-			return err
-		}
-		return nil
-	}(db, "profiles"); err != nil {
-		logger.Log("bolt", err)
 	}
 
 	var svc profilesvc.Service
 	{
-		svc = boltsvc.NewBoltService(db)
+		svc = boltsvc.NewBoltService(db, bucketName)
 	}
 
 	ctx := context.Background()
