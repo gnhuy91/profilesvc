@@ -31,14 +31,14 @@ func main() {
 	// Create bucket
 	const bucketName = "profiles"
 	{
-		err := func(db *bolt.DB, name string) error {
+		err := func(db *bolt.DB, bucket string) error {
 			tx, err := db.Begin(true)
 			if err != nil {
 				return err
 			}
 			defer tx.Rollback()
 
-			_, err = tx.CreateBucket([]byte(name))
+			_, err = tx.CreateBucket([]byte(bucket))
 			if err != nil {
 				return err
 			}
