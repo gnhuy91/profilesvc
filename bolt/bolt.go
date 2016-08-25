@@ -1,3 +1,11 @@
+// This package demonstrates how to plug database handling (BoltDB)
+// into our application.
+// Service struct wraps Bolt's DB connection and implements profilesvc.Service.
+//
+// We can easily create implementations for other database such as PostgreSQL
+// by simply create a PostgresService struct which wraps Postgres DB connection
+// and implements profilesvc.Service.
+
 package bolt
 
 import (

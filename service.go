@@ -1,3 +1,5 @@
+// This file defines our application/package logics for implementations.
+
 package profilesvc
 
 import "golang.org/x/net/context"
