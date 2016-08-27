@@ -33,6 +33,11 @@ type Service struct {
 
 func (s *Service) PostProfile(ctx context.Context, p profilesvc.Profile) error {
 	return s.DB.Update(func(tx *bolt.Tx) error {
+		// data validation
+		if (p == profilesvc.Profile{}) {
+			return profilesvc.ErrInvalidRequestBody
+		}
+
 		// Retrieve the users bucket.
 		// This should be created when the DB is first opened.
 		b := tx.Bucket([]byte(s.bucketName))

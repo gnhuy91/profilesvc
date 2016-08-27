@@ -21,5 +21,6 @@ type Profile struct {
 
 // Business-logic errors
 var (
-	ErrNotFound = errors.New("not found")
+	ErrNotFound           = errors.New("not found")
+	ErrInvalidRequestBody = errors.New("invalid request body")
 )

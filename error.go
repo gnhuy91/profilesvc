@@ -33,6 +33,8 @@ func codeFrom(err error) int {
 	// business-logic errors
 	case ErrNotFound:
 		return http.StatusNotFound
+	case ErrInvalidRequestBody:
+		return http.StatusBadRequest
 
 	// go-kit predefined errors
 	default:
