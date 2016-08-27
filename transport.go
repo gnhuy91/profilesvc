@@ -82,6 +82,13 @@ func decodeDeleteProfileRequest(_ context.Context, r *http.Request) (interface{}
 	return deleteProfileRequest{ID: id}, nil
 }
 
-func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+	if e, ok := response.(errorer); ok && e.error() != nil {
+		// Not a go-kit transport error, but a business-logic error.
+		// Provide those as HTTP errors.
+		encodeError(ctx, e.error(), w)
+		return nil
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	return json.NewEncoder(w).Encode(response)
 }

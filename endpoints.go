@@ -9,10 +9,7 @@ func MakePostProfileEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(postProfileRequest)
 		e := s.PostProfile(ctx, req.Profile)
-		if e != nil {
-			return postProfileResponse{Err: e.Error()}, nil
-		}
-		return postProfileResponse{Err: ""}, nil
+		return postProfileResponse{Err: e}, nil
 	}
 }
 
@@ -20,10 +17,7 @@ func MakeGetProfileEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(getProfileRequest)
 		p, e := s.GetProfile(ctx, req.ID)
-		if e != nil {
-			return getProfileResponse{Profile: p, Err: e.Error()}, nil
-		}
-		return getProfileResponse{Profile: p, Err: ""}, nil
+		return getProfileResponse{Profile: p, Err: e}, nil
 	}
 }
 
@@ -31,10 +25,7 @@ func MakeDeleteProfileEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(deleteProfileRequest)
 		e := s.DeleteProfile(ctx, req.ID)
-		if e != nil {
-			return deleteProfileResponse{Err: e.Error()}, nil
-		}
-		return deleteProfileResponse{Err: ""}, nil
+		return deleteProfileResponse{Err: e}, nil
 	}
 }
 
@@ -43,8 +34,10 @@ type postProfileRequest struct {
 }
 
 type postProfileResponse struct {
-	Err string `json:"err,omitempty"`
+	Err error `json:"err,omitempty"`
 }
+
+func (r postProfileResponse) error() error { return r.Err }
 
 type getProfileRequest struct {
 	ID string
@@ -52,13 +45,17 @@ type getProfileRequest struct {
 
 type getProfileResponse struct {
 	Profile Profile `json:"profile,omitempty"`
-	Err     string  `json:"err,omitempty"`
+	Err     error   `json:"err,omitempty"`
 }
+
+func (r getProfileResponse) error() error { return r.Err }
 
 type deleteProfileRequest struct {
 	ID string
 }
 
 type deleteProfileResponse struct {
-	Err string `json:"err,omitempty"`
+	Err error `json:"err,omitempty"`
 }
+
+func (r deleteProfileResponse) error() error { return r.Err }
