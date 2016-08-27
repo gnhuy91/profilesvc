@@ -60,9 +60,12 @@ func (s *Service) GetProfile(ctx context.Context, id string) (profilesvc.Profile
 
 	err = s.DB.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(s.bucketName))
-		profileBytes := b.Get([]byte(id))
 
-		err := json.Unmarshal(profileBytes, &profile)
+		p := b.Get([]byte(id))
+		if p == nil {
+			return profilesvc.ErrNotFound
+		}
+		err := json.Unmarshal(p, &profile)
 		if err != nil {
 			return err
 		}

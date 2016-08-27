@@ -2,7 +2,11 @@
 
 package profilesvc
 
-import "golang.org/x/net/context"
+import (
+	"errors"
+
+	"golang.org/x/net/context"
+)
 
 type Service interface {
 	PostProfile(ctx context.Context, p Profile) error
@@ -14,3 +18,8 @@ type Profile struct {
 	ID   string `json:"id"`
 	Name string `json:"name,omitempty"`
 }
+
+// Business-logic errors
+var (
+	ErrNotFound = errors.New("not found")
+)
